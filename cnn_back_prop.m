@@ -43,7 +43,7 @@ du4 = max( 0, du5);
 % But beware that the index-notations are different. In particular we use
 % the 1st 2 indx as spatial index, whereas the book uses last 2 index for
 % spatial. 
-[dW2 du3 db2] = backprop_conv( Q.u3, model.W2, Q.u4, du4, [1 1 1] );
+[dW2, du3, db2] = backprop_conv( Q.u3, model.W2, Q.u4, du4, [1 1 1] );
 
 
 % grad of maxpool-1
@@ -54,15 +54,18 @@ du2 = backprop_maxpool( du3, Q.u3, Q.u3_idx, 2 );
 du1 = max( 0, du2 );
 
 %backprop-conv
-[dW1 dIm db1] = backprop_conv( im, model.W1, Q.u1, du1, [1 0 1] );
+[dW1 , ~, db1] = backprop_conv( im, model.W1, Q.u1, du1, [1 0 1] );
 
 
-grad.db4 = db4;
-grad.dW4 = dW4;
-grad.db3 = db3;
-grad.dW2 = dW3;
-grad.db2 = db2;
-grad.dW1 = dW1;
-grad.db1 = db1;
+% in grad.__ we do not write d, (eg dW1) but we mean it
+grad.W1 = dW1;
+grad.b1 = db1;
+grad.W2 = dW2;
+grad.b2 = db2;
+grad.b3 = db3;
+grad.W3 = dW3;
+grad.b4 = db4;
+grad.W4 = dW4;
+
 end
 

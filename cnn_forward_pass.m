@@ -49,7 +49,7 @@ u9 = max( 0, u8 );
 
 
 u10 = u9 * W4;
-u11 = u10 + b4
+u11 = u10 + b4;
 
 
 % Softmax

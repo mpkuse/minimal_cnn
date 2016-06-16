@@ -15,9 +15,18 @@ display( imName );
 im = im2double( imread( imName ) );
 y = zeros( 1, 10 ); y( classInx(21)+1 ) = 1;
 
-tic
-%cnn_forward_pass( im, W1, b1, W2, b2, W3, b3, W4, b4, y )
-[L inter] = cnn_forward_pass( im, model, y )
+%% Iterations
+step = 0.005;
+for itr = 1:10
+%tic
+[L inter] = cnn_forward_pass( im, model, y );
+display( sprintf( '%d:%f', itr, L ) );
+
+
 grad = cnn_back_prop( im, model, inter, y );
 
-toc
+step = 5/max( grad.W1(:) )
+modelOut = PLUS( model, grad, step );
+model = modelOut;
+%toc
+end

@@ -67,10 +67,13 @@ for i=1:size(V,3) %# of input channels
                 for n=1:size(G,2)
                     m = j - (l-1);
                     p = k - (n-1);
+                    if( m > 0 && p>0 && m<size(K,1) && p<size(K,2) )
                     
-                    for q=1:0
+                    for q=1:size(G,3)
                         dV( j,k, i ) = dV( j,k, i ) + K( m,p, i,q ) * G( l,n, q );
                     end
+                    end
+
                     
                 end
             end
