@@ -1,5 +1,6 @@
-function [ output_args ] = cnn_back_prop(  im, model, Q, y )
-
+function [ grad ] = cnn_back_prop(  im, model, Q, y )
+% Back propagation for my network. Returns the grad of loss function 
+% wrt to every optimization variable.
 % note: dL is implicit. To clarify, whenevr du11 is written, 
 % it actually means dL_du11.
 
@@ -17,7 +18,7 @@ db4 = du11; %1x10 NEED
 du10 = du11; %1x10
 
 
-dw4 = Q.u9' * du10; %32x10 NEED
+dW4 = Q.u9' * du10; %32x10 NEED
 du9 = du10 * model.W4'; %1x32
 
 du8 = du9 * diag(max( 0, Q.u8 ) > 0); %1x32
@@ -26,7 +27,7 @@ du8 = du9 * diag(max( 0, Q.u8 ) > 0); %1x32
 db3 = du8; %1x32 NEED
 du7 = du8; %1x32
 
-dw3 = Q.u6_r' * du7; %256x32 NEED
+dW3 = Q.u6_r' * du7; %256x32 NEED
 du6_r = du7 * model.W3'; %1x256, can be reshapped if need be
 du6 = reshape( du6_r, 8,8,4 ); %8x8x4 
 
@@ -42,7 +43,26 @@ du4 = max( 0, du5);
 % But beware that the index-notations are different. In particular we use
 % the 1st 2 indx as spatial index, whereas the book uses last 2 index for
 % spatial. 
-[du3 dW2] = backprop_conv( Q.u3, model.W2, Q.u4, du4 );
+[dW2 du3 db2] = backprop_conv( Q.u3, model.W2, Q.u4, du4, [1 1 1] );
 
+
+% grad of maxpool-1
+du2 = backprop_maxpool( du3, Q.u3, Q.u3_idx, 2 );
+
+
+%grad of reLU
+du1 = max( 0, du2 );
+
+%backprop-conv
+[dW1 dIm db1] = backprop_conv( im, model.W1, Q.u1, du1, [1 0 1] );
+
+
+grad.db4 = db4;
+grad.dW4 = dW4;
+grad.db3 = db3;
+grad.dW2 = dW3;
+grad.db2 = db2;
+grad.dW1 = dW1;
+grad.db1 = db1;
 end
 
