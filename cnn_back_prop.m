@@ -5,7 +5,7 @@ function [ grad ] = cnn_back_prop(  im, model, Q, y )
 % it actually means dL_du11.
 
 epsilon = 1E-8;
-exp_u = exp( Q.u11 - max(Q.u11) );
+exp_u = exp( Q.u11  );
 sigma = sum( exp_u + epsilon );
 p = -log( exp_u + epsilon / sigma );
 du11 = p - y; %1x10 
@@ -67,5 +67,9 @@ grad.W3 = dW3;
 grad.b4 = db4;
 grad.W4 = dW4;
 
+display( sprintf( '(grad-norm) %e, %e,   %e, %e,   %e, %e,   %e, %e', norm(dW1(:)), norm(db1(:)),    norm(dW2(:)), norm(db2(:)),    norm(dW3(:)), norm(db3(:)),    norm(dW4(:)), norm(db4(:))   ) );
+display( sprintf( '(grad-max ) %.2e, %.2e,  %.2e, %.2e,  %.2e, %.2e,  %.2e, %.2e',max( grad.W1(:) ), max( grad.b1(:) ),max( grad.W2(:) ),max( grad.b2(:) ),  max( grad.W3(:) ),max( grad.b3(:) ),max( grad.W4(:) ),max( grad.b4(:) ) ) );
+display( sprintf( '(grad-min) %.2e, %.2e,  %.2e, %.2e,  %.2e, %.2e,  %.2e, %.2e',min( grad.W1(:) ), min( grad.b1(:) ),min( grad.W2(:) ),min( grad.b2(:) ),  min( grad.W3(:) ),min( grad.b3(:) ),min( grad.W4(:) ),min( grad.b4(:) ) ) );
+  
 end
 

@@ -4,8 +4,12 @@ function [ d ] = backprop_maxpool( g, u, u_idx, stride )
 % u : output of maxpool layer
 % u_idx : output of maxpool layer, storing index of the max value
 
-d = zeros( size(g,1)*stride, size(g,2)*stride, size(g,3) );
+d = 1E-5 * ones( size(g,1)*stride, size(g,2)*stride, size(g,3) );
 
+% set is to zero for the block in a stride block, except the one where the
+% maximum value came from. 
+% remember max acts as a router, ie. routes the gradient to max-value
+% location.
 for k=1:size(g,3)
     d(:,:,k) = maxx( g(:,:,k ), u_idx, stride );
 end

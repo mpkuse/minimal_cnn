@@ -50,10 +50,10 @@ u9 = max( 0, u8 );
 
 u10 = u9 * W4;
 u11 = u10 + b4;
-
+u11 = u11 - max(u11);
 
 % Softmax
-L = SoftMaxLoss( u11-max(u11), y );
+L = SoftMaxLoss( u11, y );
 
 
 
